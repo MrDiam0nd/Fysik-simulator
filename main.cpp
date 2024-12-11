@@ -83,48 +83,34 @@ int Gravity(Obj &obj0,Obj &obj1){
 int main(){
     InitWindow(screenWidth,screenHeight,"Fysik");
 
-    Circle boll0(RED,50.0f,screenWidth/2+200,screenHeight/2,0.0f,100.0f);
-    Circle boll1(GREEN,50.0f,screenWidth/2 - 202,screenHeight/2,0.0f,-100.0f);
-    Circle boll2(BLUE,50.0f,screenWidth/2,screenHeight/2 + 202,-100.0f,0.0f);
-    Circle boll3(PURPLE,50.0f,screenWidth/2,screenHeight/2 - 200,100.0f,0.0f);
-
     std::vector<Circle> cirklar;
-    cirklar.push_back(Circle(RED,50,screenWidth/2+100,screenHeight/2,0,0));
-    cirklar.push_back(Circle(ORANGE,50,screenWidth/2+100,screenHeight/2,0,0));
-    cirklar.push_back(Circle(YELLOW,50,screenWidth/2,screenHeight/2,0,0));
-    cirklar.push_back(Circle(GREEN,50,screenWidth/2,screenHeight/2,0,0));
-    cirklar.push_back(Circle(BLUE,50,screenWidth/2,screenHeight/2,0,0));
-    cirklar.push_back(Circle(PURPLE,50,screenWidth/2,screenHeight/2,0,0));
-    cirklar.push_back(Circle(PINK,50,screenWidth/2,screenHeight/2,0,0));
-
-    Obj* update0 = &boll0;
-
-    std::vector<Obj*> world;
-    world.push_back(&boll0);
-    world.push_back(&boll1);
-    world.push_back(&boll2);
-    world.push_back(&boll3);
+    cirklar.push_back(Circle(RED,50,screenWidth/2 +200,screenHeight/2,0,-100));
+    cirklar.push_back(Circle(ORANGE,50,screenWidth/2 -200,screenHeight/2,0,100));
+    cirklar.push_back(Circle(YELLOW,50,screenWidth/2,screenHeight/2 +200,100,0));
+    cirklar.push_back(Circle(GREEN,50,screenWidth/2,screenHeight/2 -200,-100,0));
+    cirklar.push_back(Circle(BLUE,50,screenWidth/2+200,screenHeight/2+200,100,-100));
+    cirklar.push_back(Circle(PURPLE,50,screenWidth/2+200,screenHeight/2-200,-100,-100));
+    cirklar.push_back(Circle(PINK,50,screenWidth/2-200,screenHeight/2+200,100,100));
+    cirklar.push_back(Circle(DARKPURPLE,50,screenWidth/2-200,screenHeight/2-200,-100,100));
 
     while(!WindowShouldClose()){
         float DeltaTime = GetFrameTime();
 
-        Gravity(boll0,boll1);
-        Gravity(boll0,boll2);
-        Gravity(boll0,boll3);
-        Gravity(boll1,boll2);
-        Gravity(boll1,boll3);
-        Gravity(boll2,boll3);
+        for(int i = cirklar.size(); i>0;i--){
+            for(int j = 0; j<i;j++){
+                Gravity(cirklar[i],cirklar[j]);
+            }
+        }
 
-        for(int i = 0; i<world.size(); i++){
-            world[i]->update(DeltaTime);
+        for(int i = 0; i<cirklar.size(); i++){
+            cirklar[i].update(DeltaTime);
         }
 
         BeginDrawing();
             ClearBackground(SKYBLUE);
-            boll0.draw();
-            boll1.draw();
-            boll2.draw();
-            boll3.draw();
+            for(int i = 0; i<cirklar.size(); i++){
+                cirklar[i].draw();
+            }
         EndDrawing();
     }
 
