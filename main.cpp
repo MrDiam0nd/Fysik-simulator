@@ -80,14 +80,13 @@ int Gravity(Obj &obj0,Obj &obj1){
     return F;
 }
 
-
 int main(){
     InitWindow(screenWidth,screenHeight,"Fysik");
 
-    Circle boll0(RED,50.0f,screenWidth/2,screenHeight/2,0.0f,0.0f);
-    Circle boll1(GREEN,50.0f,screenWidth/2 - 200,screenHeight/2,0.0f,-100.0f);
-    Circle boll2(BLUE,50.0f,screenWidth/2,screenHeight/2 + 200,-100.0f,0.0f);
-    Circle boll3(PURPLE,50.0f,screenWidth/2,screenHeight/2 - 210,100.0f,100.0f);
+    Circle boll0(RED,50.0f,screenWidth/2+200,screenHeight/2,0.0f,100.0f);
+    Circle boll1(GREEN,50.0f,screenWidth/2 - 202,screenHeight/2,0.0f,-100.0f);
+    Circle boll2(BLUE,50.0f,screenWidth/2,screenHeight/2 + 202,-100.0f,0.0f);
+    Circle boll3(PURPLE,50.0f,screenWidth/2,screenHeight/2 - 200,100.0f,0.0f);
 
     std::vector<Circle> cirklar;
     cirklar.push_back(Circle(RED,50,screenWidth/2+100,screenHeight/2,0,0));
