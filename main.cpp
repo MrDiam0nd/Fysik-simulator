@@ -136,10 +136,7 @@ int Collision(Circle &C0, Circle &C1){
         C0NewVel.x = C1NewVel.x;
         C1NewVel.x = temp;
 
-        C0NewVel.x /= C0.mass;
-        C0NewVel.y /= C0.mass;
-        C1NewVel.x /= C1.mass;
-        C1NewVel.y /= C1.mass;
+       
         
         Vector2 C0back = translateVectorBack(C0NewVel,base0,base1);
         Vector2 C1back = translateVectorBack(C1NewVel,base0,base1);
@@ -150,6 +147,11 @@ int Collision(Circle &C0, Circle &C1){
         C0.vel.y = C0back.y * combinedElasticity + C1back.y * (1-combinedElasticity);
         C1.vel.x = C1back.x * combinedElasticity + C0back.x * (1-combinedElasticity);
         C1.vel.y = C1back.y * combinedElasticity + C0back.y * (1-combinedElasticity);
+
+        C0.vel.x /= C0.mass;
+        C0.vel.y /= C0.mass;
+        C1.vel.x /= C1.mass;
+        C1.vel.y /= C1.mass;
 
         return 1;
     }
@@ -163,9 +165,9 @@ int main(){
     std::cout << res.x << " " << res.y << std::endl;
 
     std::vector<Circle> cirklar;
-    cirklar.push_back(Circle(RED,50,screenWidth/2 +200,screenHeight/2,0,0,0.9));
+    cirklar.push_back(Circle(RED,100,screenWidth/2 +200,screenHeight/2,0,0,0.9));
     cirklar.push_back(Circle(ORANGE,50,screenWidth/2 -200,screenHeight/2,0,0,0.9));
-    cirklar.push_back(Circle(YELLOW,50,screenWidth/2,screenHeight/2 +200,100,0,0.9));
+    /*cirklar.push_back(Circle(YELLOW,50,screenWidth/2,screenHeight/2 +200,100,0,0.9));
     cirklar.push_back(Circle(GREEN,50,screenWidth/2,screenHeight/2 -200,-100,0,0.9));
     /*cirklar.push_back(Circle(BLUE,50,screenWidth/2+200,screenHeight/2+200,100,-100));
     cirklar.push_back(Circle(PURPLE,50,screenWidth/2+200,screenHeight/2-200,-100,-100));
