@@ -5,20 +5,33 @@
 #include <math.h>
 #include <vector>
 
-Vector2 translateVector(Vector2 V,Vector2 B0, Vector2 B1){
+void print_vector(Vector2 V,char* name = "vector"){
+    std::cout << name << ":  " << V.x << "  " << V.y << std::endl;
+}
+
+void check_vector(Vector2 V,char* name = "vector"){
+    if(isnan(V.x) || isnan(V.y)){
+        std::cout << "error ";
+        print_vector(V);
+    }
+}
+
+Vector2 translateVector(Vector2 V,Vector2 BX, Vector2 BY){
     Vector2 R;
 
-    R.x = (V.x*B1.y-V.y*B1.x)/(B0.x*B1.y-B1.x*B0.y);
-    R.y = (V.y - B0.y * R.x) / B1.y;
+    R.x = (V.y * BY.x - BY.y * V.x) / (BY.x * BX.y - BY.y * BX.x);
+    R.y = (V.y * BX.x - BX.y * V.x) / (BY.y * BX.x - BY.x * BX.y);
+
+    check_vector(R);
 
     return R;
 }
 
-Vector2 translateVectorBack(Vector2 V,Vector2 B0, Vector2 B1){
+Vector2 translateVectorBack(Vector2 V,Vector2 BX, Vector2 BY){
     Vector2 R;
 
-    R.x = B0.x * V.x + B1.x * V.y;
-    R.y = B0.y * V.x + B1.y * V.y;
+    R.x = BX.x * V.x + BY.x * V.y;
+    R.y = BX.y * V.x + BY.y * V.y;
 
     return R;
 }

@@ -4,3 +4,5 @@
 
 Vector2 translateVector(Vector2 V,Vector2 B0, Vector2 B1);
 Vector2 translateVectorBack(Vector2 V,Vector2 B0, Vector2 B1);
+
+void print_vector(Vector2 V,char* name);

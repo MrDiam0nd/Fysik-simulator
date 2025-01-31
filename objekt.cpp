@@ -117,6 +117,8 @@ int Gravity(Obj &obj0,Obj &obj1,float G){
     //F=ma
     //vilket håll
 
+    distance = sqrt(distance);
+
     if(distance == 0){
         std::cout << "oh ohh (Gravitationen delade på 0)" << std::endl;
         return 1;
@@ -150,6 +152,10 @@ int Collision(Circle &C0, Circle &C1){
         C1.pos.y += base0.y * distbetween/2;
         C0.pos.x -= base0.x * distbetween/2;
         C0.pos.y -= base0.y * distbetween/2;
+
+        if(isnan(C0.vel.x) || isnan(C0.vel.y)){
+            std::cout << "C0 vel: " << C0.vel.x << " " << C0.vel.y<< std::endl;
+        }
 
         Vector2 C0NewVel = translateVector(C0.vel,base0,base1);
         Vector2 C1NewVel = translateVector(C1.vel,base0,base1);
@@ -192,11 +198,28 @@ int Collision(Circle &C0, Circle &C1){
         C0Result.y = C0NewVel.y;
         C1Result.y = C1NewVel.y;
 
+        if(isnan(C0NewVel.y)){
+            std::cout << "C0NewVel: "<< C0NewVel.y<< std::endl;
+        }
+
+        // if(isnan(C0Result.x) || isnan(C0Result.y)){
+        //     std::cout << "C0result: " << C0Result.x << " " << C0Result.y<< std::endl;
+        // }
+        // if(isnan(C1Result.x) || isnan(C1Result.y)){
+        //     std::cout << "C1result: " << C0Result.x << " " << C0Result.y<< std::endl;
+        // }
+
         Vector2 C0back = translateVectorBack(C0Result,base0,base1);
         Vector2 C1back = translateVectorBack(C1Result,base0,base1);
 
-        float combinedElasticity = ((C0.elasticity/2 + 0.5) + (C0.elasticity/2 + 0.5))/2;
+        float combinedElasticity = ((C0.elasticity/2 + 0.5) + (C1.elasticity/2 + 0.5))/2;
         combinedElasticity = 1;
+
+        // if(isnan(C0back.x) || isnan(C0back.y)){
+        //     std::cout << "C0back is nan" << std::endl;
+        //     std::cout << "C0result: " << C0Result.x << " " << C0Result.y<< std::endl;
+
+        // }
         
         C0.vel.x = C0back.x * combinedElasticity + C1back.x * (1-combinedElasticity);
         C0.vel.y = C0back.y * combinedElasticity + C1back.y * (1-combinedElasticity);
@@ -207,3 +230,4 @@ int Collision(Circle &C0, Circle &C1){
     }
     return 0;
 }
+
