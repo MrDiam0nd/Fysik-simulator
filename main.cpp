@@ -5,6 +5,7 @@
 
 #include "objekt.h"
 #include "matte.h"
+#include "CameraManager.h"
 
 const int screenWidth = 700;
 const int screenHeight = 700;
@@ -40,15 +41,17 @@ int main(){
     InitWindow(screenWidth,screenHeight,"Fysik");
 
     //SetTargetFPS(60);
+    CameraManager mainCamera;
 
     std::vector<Circle> cirklar;
-
+    
     float time = 0;
 
     // cirklar.push_back(Circle(PURPLE,20,screenWidth/2 - 250,screenHeight/2,0,100,0.9));
     // cirklar.push_back(Circle(RED,100,screenWidth/2 + 50,screenHeight/2,0,0,0.9));
 
     while(!WindowShouldClose()){
+
         float DeltaTime = GetFrameTime();
         //float DeltaTime  = 0.005;
         time += DeltaTime;
@@ -59,33 +62,6 @@ int main(){
             time -= 0.1;
         }
         
-        // for(int i = 0; i<cirklar.size(); i++){
-        //     if(cirklar[i].pos.x-cirklar[i].radius < 0){
-        //         cirklar[i].pos.x = 0+cirklar[i].radius;
-        //         if(cirklar[i].vel.x < 0){
-        //             cirklar[i].vel.x *= -0.9;
-        //         }
-        //     }
-        //     if(cirklar[i].pos.x+cirklar[i].radius > screenWidth){
-        //         cirklar[i].pos.x = screenWidth-cirklar[i].radius;
-        //         if(cirklar[i].vel.x > 0){
-        //             cirklar[i].vel.x *= -0.9;
-        //         }
-        //     }
-        //     if(cirklar[i].pos.y-cirklar[i].radius < 0){
-        //         cirklar[i].pos.y = 0+cirklar[i].radius;
-        //         if(cirklar[i].vel.y < 0){
-        //             cirklar[i].vel.y *= -0.9;
-        //         }
-        //     }
-        //     if(cirklar[i].pos.y+cirklar[i].radius > screenHeight){
-        //         cirklar[i].pos.y = screenHeight-cirklar[i].radius;
-        //         if(cirklar[i].vel.y > 0){
-        //             cirklar[i].vel.y *= -0.9;
-        //         }
-        //     }
-        // }
-
         check_nans(cirklar);
         for(int i = cirklar.size()-1; i>0;i--){
             for(int j = 0; j<i;j++){
@@ -110,26 +86,20 @@ int main(){
 
             }
         }
-        
-        // for(int i = 0; i<cirklar.size(); i++){
-        //     cirklar[i].vel.y += 1;
-        // }
-        /**/
-        //std::cout << cirklar[0].pos.x<< cirklar[0].vel.x << std::endl;
 
         for(int i = 0; i<cirklar.size(); i++){
             cirklar[i].update(DeltaTime);
         }
 
-        //std::cout <<"                  "<< cirklar[0].vel.x << std::endl;
-
         BeginDrawing();
             ClearBackground(SKYBLUE);
+            BeginMode2D(mainCamera.GetCamera());
             for(int i = 0; i<cirklar.size(); i++){
                 cirklar[i].draw();
             }
+            EndMode2D();
         EndDrawing();
     }
-
+    CloseWindow();
     return 0;
 }
