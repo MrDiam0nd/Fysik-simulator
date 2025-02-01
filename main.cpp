@@ -5,6 +5,7 @@
 
 #include "objekt.h"
 #include "matte.h"
+#include "CameraManager.h"
 
 const int screenWidth = 700;
 const int screenHeight = 700;
@@ -116,13 +117,6 @@ int Spacefn(const float dt,std::vector<Circle> &cirklar,float &time){
         cirklar[i].update(dt);
     }
 
-    BeginDrawing();
-        ClearBackground(BLACK);
-        for(int i = 0; i<cirklar.size(); i++){
-            cirklar[i].draw();
-        }
-    EndDrawing();
-
     return 0;
 }
 
@@ -183,24 +177,12 @@ int Boxfn(const float dt,std::vector<Circle> &cirklar,float &time){
         cirklar[i].update(dt);
     }
 
-    BeginDrawing();
-        ClearBackground(SKYBLUE);
-        for(int i = 0; i<cirklar.size(); i++){
-            cirklar[i].draw();
-        }
-    EndDrawing();
-
     return 0;
 }
 
 int Menufn(enum gamestate &gs,class Button &button){
 
 
-
-    BeginDrawing();
-        ClearBackground(SKYBLUE);
-        button.draw();
-    EndDrawing();
 
     return 0;
 }
@@ -209,6 +191,7 @@ int main(){
     InitWindow(screenWidth,screenHeight,"Fysik");
     enum gamestate gs = SPACE;
     //SetTargetFPS(60);
+    CameraManager mainCamera;
 
     std::vector<Circle> cirklar;
     class Button button({100,100},{100,100},RED,BLUE);
@@ -232,14 +215,40 @@ int main(){
 
         if(gs == MENU){
             Menufn(gs,button);
+
+            BeginDrawing();
+                ClearBackground(SKYBLUE);
+                button.draw();
+            EndDrawing();
         }
         if(gs == SPACE){
             Spacefn(DeltaTime,cirklar,time);
+
+            BeginDrawing();
+                ClearBackground(BLACK);
+                BeginMode2D(mainCamera.GetCamera());
+                for(int i = 0; i<cirklar.size(); i++){
+                    cirklar[i].draw();
+                }
+                EndMode2D();
+            EndDrawing();
         }
         if(gs == BOX){
             Boxfn(DeltaTime,cirklar,time);
-        }
-    }
 
+            BeginDrawing();
+                ClearBackground(SKYBLUE);
+                BeginMode2D(mainCamera.GetCamera());
+                for(int i = 0; i<cirklar.size(); i++){
+                    cirklar[i].draw();
+                }
+                EndMode2D();
+            EndDrawing();
+        }
+
+
+        
+    }
+    CloseWindow();
     return 0;
 }
