@@ -10,6 +10,51 @@ const int screenWidth = 700;
 const int screenHeight = 700;
 const float G = 100;
 
+enum gamestate {
+    MENU,
+    SPACE,
+    BOX
+};
+
+class Button {
+    public:
+    Vector2 pos;
+    Vector2 size;
+    Color color;
+    Color color2;
+    bool hovered;
+    int (*function)();
+
+    Button(Vector2 posn, Vector2 sizen, Color colorn, Color color2n){
+        pos = posn;
+        size = sizen;
+        color = colorn;
+        color2 = color2n;
+        return;
+    }
+
+    bool check(){
+        bool R = false;
+        Vector2 mousepos = GetMousePosition();
+        if(mousepos.x >= pos.x && mousepos.x <= pos.x + size.x && mousepos.y >= pos.y && mousepos.y <= pos.y + size.y){
+            hovered = true;
+            if(IsMouseButtonPressed(0)){
+                R = true;
+                function();
+            }
+        }
+        return R;
+    }
+
+    void draw(){
+        if(hovered){
+            DrawRectangle(pos.x,pos.y,size.x,size.y,color2);
+        }else{
+            DrawRectangle(pos.x,pos.y,size.x,size.y,color);
+        }
+    }
+};
+
 int check_nans(std::vector<Circle> cirklar){
     for(int i = 0; i< cirklar.size();i++){
             bool errorpos = isnan(cirklar[i].pos.x);
@@ -36,99 +81,164 @@ int check_nans(std::vector<Circle> cirklar){
     return 0;
 }
 
+int Spacefn(const float dt,std::vector<Circle> &cirklar,float &time){
+    if(time > 0.1){
+        cirklar.push_back(Circle(RED,10,rand()%screenWidth,rand()%screenHeight,0,0,0.95));
+        time -= 0.1;
+    }
+
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Gravity(cirklar[i],cirklar[j],G);
+
+        }
+    }
+
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Collision(cirklar[i],cirklar[j]);
+        }
+    }
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Collision(cirklar[i],cirklar[j]);
+        }
+    }
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Collision(cirklar[i],cirklar[j]);
+        }
+    }
+    
+    check_nans(cirklar);
+
+    for(int i = 0; i<cirklar.size(); i++){
+        cirklar[i].update(dt);
+    }
+
+    BeginDrawing();
+        ClearBackground(BLACK);
+        for(int i = 0; i<cirklar.size(); i++){
+            cirklar[i].draw();
+        }
+    EndDrawing();
+
+    return 0;
+}
+
+int Boxfn(const float dt,std::vector<Circle> &cirklar,float &time){
+    if(time > 0.1){
+        cirklar.push_back(Circle(RED,10,rand()%screenWidth,rand()%screenHeight,0,0,0.95));
+        time -= 0.1;
+    }
+
+    for(int i = 0; i<cirklar.size(); i++){
+        cirklar[i].vel.y += 1;
+    }
+
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Collision(cirklar[i],cirklar[j]);
+        }
+    }
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Collision(cirklar[i],cirklar[j]);
+        }
+    }
+    for(int i = cirklar.size()-1; i>0;i--){
+        for(int j = 0; j<i;j++){
+            Collision(cirklar[i],cirklar[j]);
+        }
+    }
+
+    for(int i = 0; i<cirklar.size(); i++){
+        if(cirklar[i].pos.x-cirklar[i].radius < 0){
+            cirklar[i].pos.x = 0+cirklar[i].radius;
+            if(cirklar[i].vel.x < 0){
+                cirklar[i].vel.x *= -0.9;
+            }
+        }
+        if(cirklar[i].pos.x+cirklar[i].radius > screenWidth){
+            cirklar[i].pos.x = screenWidth-cirklar[i].radius;
+            if(cirklar[i].vel.x > 0){
+                cirklar[i].vel.x *= -0.9;
+            }
+        }
+        if(cirklar[i].pos.y-cirklar[i].radius < 0){
+            cirklar[i].pos.y = 0+cirklar[i].radius;
+            if(cirklar[i].vel.y < 0){
+                cirklar[i].vel.y *= -0.9;
+            }
+        }
+        if(cirklar[i].pos.y+cirklar[i].radius > screenHeight){
+            cirklar[i].pos.y = screenHeight-cirklar[i].radius;
+            if(cirklar[i].vel.y > 0){
+                cirklar[i].vel.y *= -0.9;
+            }
+        }
+    }
+
+    for(int i = 0; i<cirklar.size(); i++){
+        cirklar[i].update(dt);
+    }
+
+    BeginDrawing();
+        ClearBackground(SKYBLUE);
+        for(int i = 0; i<cirklar.size(); i++){
+            cirklar[i].draw();
+        }
+    EndDrawing();
+
+    return 0;
+}
+
+int Menufn(enum gamestate &gs,class Button &button){
+
+
+
+    BeginDrawing();
+        ClearBackground(SKYBLUE);
+        button.draw();
+    EndDrawing();
+
+    return 0;
+}
+
 int main(){
     InitWindow(screenWidth,screenHeight,"Fysik");
-
+    enum gamestate gs = SPACE;
     //SetTargetFPS(60);
 
     std::vector<Circle> cirklar;
+    class Button button({100,100},{100,100},RED,BLUE);
 
     float time = 0;
-
-    // cirklar.push_back(Circle(PURPLE,20,screenWidth/2 - 250,screenHeight/2,0,100,0.9));
-    // cirklar.push_back(Circle(RED,100,screenWidth/2 + 50,screenHeight/2,0,0,0.9));
 
     while(!WindowShouldClose()){
         float DeltaTime = GetFrameTime();
         //float DeltaTime  = 0.005;
         time += DeltaTime;
 
-        if(time > 0.1){
-            // cirklar.push_back(Circle(RED,10,350+(rand()%screenWidth)/100,0,0,0,0.9));
-            cirklar.push_back(Circle(RED,10,rand()%screenWidth,rand()%screenHeight,0,0,0.95));
-            time -= 0.1;
+        if(IsKeyDown(KEY_S)){
+            gs = SPACE;
         }
-        
-        // for(int i = 0; i<cirklar.size(); i++){
-        //     if(cirklar[i].pos.x-cirklar[i].radius < 0){
-        //         cirklar[i].pos.x = 0+cirklar[i].radius;
-        //         if(cirklar[i].vel.x < 0){
-        //             cirklar[i].vel.x *= -0.9;
-        //         }
-        //     }
-        //     if(cirklar[i].pos.x+cirklar[i].radius > screenWidth){
-        //         cirklar[i].pos.x = screenWidth-cirklar[i].radius;
-        //         if(cirklar[i].vel.x > 0){
-        //             cirklar[i].vel.x *= -0.9;
-        //         }
-        //     }
-        //     if(cirklar[i].pos.y-cirklar[i].radius < 0){
-        //         cirklar[i].pos.y = 0+cirklar[i].radius;
-        //         if(cirklar[i].vel.y < 0){
-        //             cirklar[i].vel.y *= -0.9;
-        //         }
-        //     }
-        //     if(cirklar[i].pos.y+cirklar[i].radius > screenHeight){
-        //         cirklar[i].pos.y = screenHeight-cirklar[i].radius;
-        //         if(cirklar[i].vel.y > 0){
-        //             cirklar[i].vel.y *= -0.9;
-        //         }
-        //     }
-        // }
-
-        check_nans(cirklar);
-        for(int i = cirklar.size()-1; i>0;i--){
-            for(int j = 0; j<i;j++){
-                Collision(cirklar[i],cirklar[j]);
-            }
+        if(IsKeyDown(KEY_B)){
+            gs = BOX;
         }
-        for(int i = cirklar.size()-1; i>0;i--){
-            for(int j = 0; j<i;j++){
-                Collision(cirklar[i],cirklar[j]);
-            }
-        }
-        for(int i = cirklar.size()-1; i>0;i--){
-            for(int j = 0; j<i;j++){
-                Collision(cirklar[i],cirklar[j]);
-            }
-        }
-        check_nans(cirklar);
-        
-        for(int i = cirklar.size()-1; i>0;i--){
-            for(int j = 0; j<i;j++){
-                Gravity(cirklar[i],cirklar[j],G);
-
-            }
-        }
-        
-        // for(int i = 0; i<cirklar.size(); i++){
-        //     cirklar[i].vel.y += 1;
-        // }
-        /**/
-        //std::cout << cirklar[0].pos.x<< cirklar[0].vel.x << std::endl;
-
-        for(int i = 0; i<cirklar.size(); i++){
-            cirklar[i].update(DeltaTime);
+        if(IsKeyDown(KEY_M)){
+            gs = MENU;
         }
 
-        //std::cout <<"                  "<< cirklar[0].vel.x << std::endl;
-
-        BeginDrawing();
-            ClearBackground(SKYBLUE);
-            for(int i = 0; i<cirklar.size(); i++){
-                cirklar[i].draw();
-            }
-        EndDrawing();
+        if(gs == MENU){
+            Menufn(gs,button);
+        }
+        if(gs == SPACE){
+            Spacefn(DeltaTime,cirklar,time);
+        }
+        if(gs == BOX){
+            Boxfn(DeltaTime,cirklar,time);
+        }
     }
 
     return 0;
