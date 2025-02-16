@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
+
 CameraManager::CameraManager()
 {
     camera.zoom = 1.0f;
