@@ -8,7 +8,7 @@ Boxscene::Boxscene(){
     return;
 }
 
-Boxscene::fn(){
+int Boxscene::fn(){
     float DeltaTime = GetFrameTime();
     time += DeltaTime;
 

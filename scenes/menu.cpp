@@ -40,7 +40,7 @@ Menuscene::Menuscene() :
     return;
 }
 
-Menuscene::fn(gamestate &gs){
+int Menuscene::fn(gamestate &gs){
     if(Spacebtn.check()){
         gs = SPACE;
     }

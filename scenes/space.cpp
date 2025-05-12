@@ -9,7 +9,7 @@ Spacescene::Spacescene(){
     return;
 }
 
-Spacescene::fn(){
+int Spacescene::fn(){
     float DeltaTime = GetFrameTime();
     time += DeltaTime;
 
