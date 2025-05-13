@@ -10,6 +10,7 @@
 #include "space.h"
 #include "box.h"
 #include "menu.h"
+#include "simple.h"
 
 const int screenWidth = 700;
 const int screenHeight = 700;
@@ -49,6 +50,7 @@ int main(){
     Spacescene spacescene;
     Boxscene boxscene;
     Menuscene menuscene;
+    Simplescene simplescene;
 
     while(!WindowShouldClose())
     {
@@ -64,6 +66,12 @@ int main(){
         if(IsKeyDown(KEY_T)){
             gs = TRI;
         }
+        if(IsKeyDown(KEY_T)){
+            gs = TRI;
+        }
+        if(IsKeyDown(KEY_Q)){
+            gs = SIMPLE;
+        }
 
         if(gs == MENU){
             menuscene.fn(gs);
@@ -76,6 +84,9 @@ int main(){
         }
         if(gs == TRI){
             trianglescene.fn();
+        }
+        if(gs == SIMPLE){
+            simplescene.fn();
         }
     }
     CloseWindow();

@@ -148,86 +148,36 @@ int Collision(Circle &C0, Circle &C1){
         Vector2 base0 = {dx/distance,dy/distance};
         Vector2 base1 = {base0.y,-base0.x};
 
+        // Flytta isär dem
         C1.pos.x += base0.x * distbetween/2;
         C1.pos.y += base0.y * distbetween/2;
         C0.pos.x -= base0.x * distbetween/2;
         C0.pos.y -= base0.y * distbetween/2;
 
-        if(isnan(C0.vel.x) || isnan(C0.vel.y)){
-            std::cout << "C0 vel: " << C0.vel.x << " " << C0.vel.y<< std::endl;
-        }
+        // Nytt kordinatsystem
+        Vector2 V0 = translateVector(C0.vel,base0,base1);
+        Vector2 U0 = translateVector(C1.vel,base0,base1);
 
-        Vector2 C0NewVel = translateVector(C0.vel,base0,base1);
-        Vector2 C1NewVel = translateVector(C1.vel,base0,base1);
+        Vector2 V = V0;
+        Vector2 U = U0;
 
-        ////////////////////////
-        // C0.mass * C0NewVel.x^^2
-        /*
-        C0NewVel.x *= C0.mass;
-        C1NewVel.x *= C1.mass;
-        C0NewVel.y *= C0.mass;
-        C1NewVel.y *= C1.mass;
+        float m = C0.mass;
+        float M = C1.mass;
 
-        float temp = C0NewVel.x;
-        C0NewVel.x = C1NewVel.x;
-        C1NewVel.x = temp;
+        float e = (C0.elasticity + C1.elasticity)/2;
 
-        */
-        
-        //C0.mass
-        
-        //C1.mass
+        // Fysik
+        V.x=(e*M*(U0.x-V0.x)+M*U0.x+m*V0.x)/(M+m);
+        U.x=(e*m*(V0.x-U0.x)+M*U0.x+m*V0.x)/(M+m);
 
-        //C0NewVel.x
+        // Tillbaka till gamla kordinatsystemet
+        Vector2 C0back = translateVectorBack(V,base0,base1);
+        Vector2 C1back = translateVectorBack(U,base0,base1);
 
-        //C1NewVel.x
-
-        Vector2 C0Result;
-        Vector2 C1Result;
-
-        float CRes = (C0.elasticity + C1.elasticity)/2;
-
-        //Perfekt elastisk
-        //C0Result.x = ((C0.mass-C1.mass)*C0NewVel.x + 2*C1.mass*C1NewVel.x)/(C0.mass + C1.mass);
-        //C1Result.x = (2*C0.mass*C0NewVel.x + (C1.mass-C0.mass)*C1NewVel.x)/(C0.mass + C1.mass);
-        
-        //inelastisk collision
-        C0Result.x = (CRes*C1.mass*(C1NewVel.x-C0NewVel.x) + C0.mass*C0NewVel.x + C1.mass*C1NewVel.x)/(C0.mass+C1.mass);
-        C1Result.x = (CRes*C0.mass*(C0NewVel.x-C1NewVel.x) + C0.mass*C0NewVel.x + C1.mass*C1NewVel.x)/(C0.mass+C1.mass);
-
-        C0Result.y = C0NewVel.y;
-        C1Result.y = C1NewVel.y;
-
-        if(isnan(C0NewVel.y)){
-            std::cout << "C0NewVel: "<< C0NewVel.y<< std::endl;
-        }
-
-        // if(isnan(C0Result.x) || isnan(C0Result.y)){
-        //     std::cout << "C0result: " << C0Result.x << " " << C0Result.y<< std::endl;
-        // }
-        // if(isnan(C1Result.x) || isnan(C1Result.y)){
-        //     std::cout << "C1result: " << C0Result.x << " " << C0Result.y<< std::endl;
-        // }
-
-        Vector2 C0back = translateVectorBack(C0Result,base0,base1);
-        Vector2 C1back = translateVectorBack(C1Result,base0,base1);
-
-        float combinedElasticity = ((C0.elasticity/2 + 0.5) + (C1.elasticity/2 + 0.5))/2;
-        combinedElasticity = 1;
-
-        // if(isnan(C0back.x) || isnan(C0back.y)){
-        //     std::cout << "C0back is nan" << std::endl;
-        //     std::cout << "C0result: " << C0Result.x << " " << C0Result.y<< std::endl;
-
-        // }
-        
-        C0.vel.x = C0back.x * combinedElasticity + C1back.x * (1-combinedElasticity);
-        C0.vel.y = C0back.y * combinedElasticity + C1back.y * (1-combinedElasticity);
-        C1.vel.x = C1back.x * combinedElasticity + C0back.x * (1-combinedElasticity);
-        C1.vel.y = C1back.y * combinedElasticity + C0back.y * (1-combinedElasticity);
+        C0.vel = C0back;
+        C1.vel = C1back;
 
         return 1;
     }
     return 0;
 }
-

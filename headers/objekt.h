@@ -43,3 +43,5 @@ class Triangle: public Obj{
 int Gravity(Obj &obj0,Obj &obj1,float G);
 
 int Collision(Circle &C0, Circle &C1);
+
+int CollisionNew(Circle &C0, Circle &C1);

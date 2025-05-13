@@ -7,7 +7,8 @@ enum gamestate {
     SPACE,
     BOX,
     EXP,
-    TRI
+    TRI,
+    SIMPLE
 };
 
 class Button {

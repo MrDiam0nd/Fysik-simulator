@@ -4,14 +4,14 @@
 #include "objekt.h"
 #include <vector>
 
-class Spacescene{
+class Simplescene{
 
     CameraManager mainCamera;
     std::vector<Circle> cirklar;
     float time = 0;
-    const float G = 100;
+    const float G = 200;
 
 public:
-    Spacescene();
+    Simplescene();
     int fn();
 };

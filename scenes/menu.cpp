@@ -32,10 +32,10 @@ void Button::draw(){
 }
 
 Menuscene::Menuscene() : 
-        Spacebtn({100,50},{100,100},RED,BLUE) ,
-        Boxbtn({100,250},{100,100},RED,BLUE) ,
-        Expbtn({100,450},{100,100},RED,BLUE) ,
-        Quitbtn({100,650},{100,100},RED,BLUE) 
+        Spacebtn({100,50},{100,100},{230,10,10,255},{210,70,70,255}) ,
+        Boxbtn({100,250},{100,100},{230,10,10,255},{210,70,70,255}) ,
+        Expbtn({100,450},{100,100},{230,10,10,255},{210,70,70,255}) ,
+        Quitbtn({100,650},{100,100},{230,10,10,255},{210,70,70,255}) 
 {
     return;
 }
@@ -47,9 +47,6 @@ Menuscene::fn(gamestate &gs){
     if(Boxbtn.check()){
         gs = BOX;
     }
-    if(Quitbtn.check()){
-        
-    }
     if(Expbtn.check()){
         gs = EXP;
     }
@@ -57,8 +54,8 @@ Menuscene::fn(gamestate &gs){
         ClearBackground(SKYBLUE);
         Spacebtn.draw();
         Boxbtn.draw();
-        Quitbtn.draw();
         Expbtn.draw();
+        DrawText(TextFormat("Score: %i", 100), 200, 80, 100, RED);
     EndDrawing();
     return 0;
 }
