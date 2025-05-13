@@ -10,7 +10,7 @@ Trianglescene::Trianglescene() : tri( BLACK,{0,100},{100,0},{-100,0},350,350,0,0
     return;
 }
 
-Trianglescene::fn()
+int Trianglescene::fn()
 {
     float DeltaTime = GetFrameTime();
 
