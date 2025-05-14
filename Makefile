@@ -24,7 +24,7 @@ ifeq ($(UNAME_S),Linux)
     TARGET_EXT =
 else ifeq ($(UNAME_S),Windows_NT)
     # Windows settings (MinGW)
-    CFLAGS = -Wall -std=c++11 -Iheaders -Iraylib/include
+    CFLAGS = -Wall -std=c++11 -Iheaders -Iraylib/include 
     LDFLAGS = -Lraylib/lib -lraylib -lopengl32 -lgdi32 -lwinmm
     TARGET_EXT = .exe
 endif
@@ -43,7 +43,7 @@ $(TARGET)$(TARGET_EXT): $(OBJECTS)
 # Clean up
 clean:
 ifeq ($(UNAME_S),Windows_NT)
-	del /Q $(OBJECTS) $(TARGET)$(TARGET_EXT)
+	rm $(OBJECTS) $(TARGET)$(TARGET_EXT)
 else
 	rm -f $(OBJECTS) $(TARGET)$(TARGET_EXT)
 endif

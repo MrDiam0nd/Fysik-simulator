@@ -13,7 +13,7 @@ Simplescene::Simplescene(){
     return;
 }
 
-Simplescene::fn(){
+int Simplescene::fn(){
     float DeltaTime = GetFrameTime();
     time += DeltaTime;
 
